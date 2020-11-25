@@ -12,8 +12,12 @@ function makeGraphs(error, apiData) {
 		d.Date_of_offence = dateFormat.parse(d.Date_of_offence);
 				d.Date_of_offence.setDate(1);
 		d.Total_Fatalities = +d.Total_Fatalities;
+		d.Longitude = +d.Longitude;
+    	d.Latitude = +d.Latitude;
 	});
-	//Create a Crossfilter instance
+
+	
+    //Create a Crossfilter instance
 	var ndx = crossfilter(dataSet);
 
 	//Define Dimensions
@@ -24,7 +28,9 @@ function makeGraphs(error, apiData) {
 	var hit_and_run_ = ndx.dimension(function(d) { return d.Hit_and_run; });
 	var maneuver_type_ = ndx.dimension(function(d) { return d.Maneuver_type; });
 	var total_Fatalities_  = ndx.dimension(function(d) { return d.Total_Fatalities; });
-
+	//var facilities = ndx.dimension(function(d) {return d.geo;});
+	//var groupname = "marker-area";
+	var allDim = ndx.dimension(function(d) {return d;});
 
 	//Calculate metrics
 	var projectsByDate = date_of_offence_.group(); 
@@ -33,7 +39,7 @@ function makeGraphs(error, apiData) {
 	var projectsByIntersectionStatus = intersection_mid_block_.group();
 	var hitAndRunGroup = hit_and_run_.group();
 	var projectsByManeuverType = maneuver_type_.group();
-	
+	//var facilitiesGroup = facilities.group().reduceCount();
 
 	var all = ndx.groupAll();
 
@@ -51,7 +57,6 @@ function makeGraphs(error, apiData) {
 	});
 
 
-
 	var netTotalFatalities = ndx.groupAll().reduceSum(function(d) {return d.Total_Fatalities;});
 
 	//Define threshold values for data
@@ -60,6 +65,10 @@ function makeGraphs(error, apiData) {
 
 console.log(minDate);
 console.log(maxDate);
+	
+	
+	
+
 
     //Charts
 	var dateChart = dc.lineChart("#date-chart");
@@ -70,15 +79,19 @@ console.log(maxDate);
 	var totalProjects = dc.numberDisplay("#total-projects");
 	var netFatalities = dc.numberDisplay("#net-Fatalities");
 	var maneuverFatalities = dc.barChart("#maneuver-Fatalities");
-
+	//var maps = dc.leafletMarkerChart("#map");
 
   selectField = dc.selectMenu('#menuselect')
         .dimension(police_station_)
         .group(projectsByPoliceStation); 
 
+    
+
        dc.dataCount("#row-selection")
         .dimension(ndx)
         .group(all);
+
+
 
 
 	totalProjects
@@ -122,6 +135,7 @@ console.log(maxDate);
         .group(hitAndRunGroup)
         .xAxis().ticks(4);
 
+
 	policeStationChart
 		//.width(300)
 		.height(220)
@@ -157,11 +171,97 @@ console.log(maxDate);
         .ordering(function(d){return d.value;})
         .yAxis().tickFormat(d3.format("s"));
 
+   
+/* instantiate and configure map 
+	var mymap = L.map('map').setView([31.0943,76.6143], 10);
+	
+	
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(mymap);
+
+	// Icon options
+	var iconOptions = {
+   	iconUrl: 'logo.png',
+   	iconSize: [20, 20]
+	}
+
+// Creating a custom icon
+var customIcon = L.icon(iconOptions);
+
+	// Options for the marker
+var markerOptions = {
+   title: "Location",
+   clickable: true,
+   draggable: true,
+   icon: customIcon
+}
+
+
+	L.marker([31.098747,76.613475],markerOptions).addTo(mymap);
+	L.marker([31.1844102,76.572122],markerOptions).addTo(mymap);
+	L.marker([31.061886,76.599794],markerOptions).addTo(mymap);
+	L.marker([31.160744,76.590448],markerOptions).addTo(mymap);
+	L.marker([31.1844102,76.572122],markerOptions).addTo(mymap);
+	L.marker([31.061886,76.599794],markerOptions).addTo(mymap);
+	L.marker([31.147479,76.570173],markerOptions).addTo(mymap);
+	L.marker([31.2068993,76.6081615],markerOptions).addTo(mymap);
+	L.marker([31.2057203,76.60279024],markerOptions).addTo(mymap);
+	L.marker([31.098747,76.613475],markerOptions).addTo(mymap);
+    
+    
+*/
+
+
+	var map = L.map('map');
+
+	var drawMap = function(){
+		map.setView([31.0943,76.6143],10);
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+	}).addTo(map);
+
+
+	//Heatmap
+
+	var geoData = [];
+	_.each(allDim.top(Infinity),function(d){
+		geoData.push([d["Latitude"], d["Longitude"], 1]);
+	});
+
+	var heat = L.heatLayer(geoData,{
+		radius: 10,
+		blur: 20,
+		maxZoom: 1,
+	}).addTo(map);
+
+};
+
+drawMap();
+
+
+
+dcCharts = [selectField, dateChart, collisionTypeChart, hitAndRunChart, policeStationChart, intersectionChart];
+
+_.each(dcCharts, function (dcChart) {
+    dcChart.on("filtered", function (chart, filter) {
+        map.eachLayer(function (layer) {
+          map.removeLayer(layer)
+        }); 
+    drawMap();
+    });
+});
 
 
 
 
 
     dc.renderAll();
+    //dc.renderAll(groupname);
+
+
+
+  
 
 };

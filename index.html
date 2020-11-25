@@ -11,11 +11,19 @@
 		<script src="js/skel.min.js"></script>
 		<!--<script src="js/skel-panels.min.js"></script>-->
 		<script src="js/init.js"></script>
+		
+		
+		
+
+
 
 
 			<link rel="stylesheet" href="css/dc.css" />
 <link rel="stylesheet" href="css/stylenew.css" />
 			<link rel="stylesheet" href="css/introjs.css" />
+			<link rel="stylesheet" type="text/css" href="css/leaflet.css">
+			
+			
 		
 <style>
 	      .intro_button{
@@ -77,6 +85,7 @@
 
 
 					<div class="row">
+
 						<div class="6u chart-wrapper"  data-step="5" data-intro="Area chart showing the number of fatalities over a period of time. Drag and select to view detailed data for a particular time range"style="font-weight: normal" data-position="right"  id="date-chart">
 							<div class="chart-title bold"> <strong> Number of Fatalities </strong></div>
 
@@ -91,31 +100,50 @@
 					</div>
 
 					<div class="row">
+
 						<div class="4u chart-wrapper"  data-step="8" data-intro="View the fatalities counts for the different police station groups"style="font-weight: normal" data-position="right"  id="policeStation-chart">
 							<div class="chart-title">  <strong> Fatalities Count by Police Stations </strong> </div>
 						</div>
+
 						<div class="4u chart-wrapper"  data-step="9" data-intro="View the fatalities count for the hit and run cases. Hover the cursoe for tooltips."style="font-weight: normal" data-position="top" id="hitAndRun-chart">
-							<div class="chart-title">  <strong> Fatalities Count by Hit and Run Cases</strong></div>							
+							<div class="chart-title">  <strong> Fatalities Count by Hit and Run Cases</strong></div>
+						</div>
+						<!--<div class = "4u chart-wrapper" data-step="9" data-intro="View the fatalities count by maneuver type.THIS CHART IS STAND ALONE AND WILL NOT FILTER BY THE OTHER SELECTIONS" id="map2" style="height: 250px">
+							<div class="chart-title">  <strong> Map </strong> </div>
+													
+
+						</div>-->
+
+						<div class = "4u chart-wrapper" data-step="10" data-intro="View the map with heat map feature" id="map" style="height: 250px">
+							<div class="chart-title">  <strong> Map </strong> </div>
+													
 
 						</div>
-
+						<!--
 						<div class="4u chart-wrapper"  data-step="10" data-intro="View the fatalities count by maneuver type.THIS CHART IS STAND ALONE AND WILL NOT FILTER BY THE OTHER SELECTIONS"style="font-weight: normal" data-position="left"  id="maneuver-Fatalities">
 							<div class="chart-title">  <strong> Fatalities count by Maneuver Type </strong> </div>
-						</div>
-
-					</div>
-
+						</div>-->
+				
+						
+						
 				</div>	
 			</div>
 
 			
 		</div>
 
+<script src='js/jquery.min.js' type='text/javascript'></script>
+<script type="text/javascript "src="js/underscore-min.js"></script>
 <script src='js/crossfilter.js' type='text/javascript'></script>
 <script src='js/d3.js' type='text/javascript'></script>
 <script src='js/dc.js' type='text/javascript'></script>
+<script src="js/leaflet.js" type="text/javascript" ></script>
+<script type="text/javascript "src="js/leaflet-heat.js"></script>
 <script src='js/queue.js' type='text/javascript'></script>
 <script src='js/Dashboard.js' type='text/javascript'></script>
 <script src="js/intro.js" type="text/javascript"></script>
+
+
+
 	</body>
 </html>

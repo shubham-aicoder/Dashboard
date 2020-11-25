@@ -5,4 +5,8 @@ df.columns = ['Sr_No','FIR_No','IPC','Date_of_offence','Date_of_FIR','Police_sta
 print(df['Date_of_offence'].isnull().sum().sum())
 df['Date_of_offence']=pd.to_datetime(df['Date_of_offence'],format='%m-%d-%Y').dt.strftime('%m/%d/%Y')
 print(df['Date_of_offence'])
-df.to_csv("data.csv")
+df['geo']= df["Latitude"].astype(str) +","+ df["Longitude"].astype(str)
+print(df['geo'].value_counts())
+
+print(df['Longitude'].isnull().sum().sum());
+#df.to_csv("data.csv")
